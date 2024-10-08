@@ -1,7 +1,7 @@
 package com.example.AMS.service;
 
-import exception.DataDuplicateException;
-import exception.NoSuchDataException;
+import com.example.AMS.exception.DataDuplicateException;
+import com.example.AMS.exception.NoSuchDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.JedisPooled;

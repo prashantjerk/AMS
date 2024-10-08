@@ -9,12 +9,10 @@ import java.util.Objects;
 public class Course {
     private String courseId;
     private String courseName;
-    private List<Task> tasks;
 
-    public Course(String courseId, String courseName, List<Task> tasks) {
+    public Course(String courseId, String courseName) {
         this.courseId = courseId;
         this.courseName = courseName;
-        this.tasks = tasks;
     }
 
     public String getCourseId() {
@@ -33,23 +31,15 @@ public class Course {
         this.courseName = courseName;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Course course)) return false;
-        return Objects.equals(courseId, course.courseId) && Objects.equals(courseName, course.courseName) && Objects.equals(tasks, course.tasks);
+        return Objects.equals(courseId, course.courseId) && Objects.equals(courseName, course.courseName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(courseId, courseName, tasks);
+        return Objects.hash(courseId, courseName);
     }
 }

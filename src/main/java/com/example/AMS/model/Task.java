@@ -11,10 +11,11 @@ import java.util.Objects;
 
 @Entity
 public class Task {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long courseId;
-    private String courseName;
+    private Long taskId;
+    private String courseId;
     private String taskTitle;
     private String description;
     private LocalDate dueDate;
@@ -25,8 +26,7 @@ public class Task {
 
     }
 
-    public Task(String courseName, String taskTitle, String description, LocalDate dueDate, Priority priority, boolean completed) {
-        this.courseName = courseName;
+    public Task(String taskTitle, String description, LocalDate dueDate, Priority priority, boolean completed) {
         this.taskTitle = taskTitle;
         this.description = description;
         this.dueDate = dueDate;
@@ -34,12 +34,20 @@ public class Task {
         this.completed = completed;
     }
 
-    public String getCourseName() {
-        return courseName;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 
     public String getTaskTitle() {
@@ -86,11 +94,11 @@ public class Task {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Task task)) return false;
-        return Objects.equals(courseName, task.courseName) && Objects.equals(taskTitle, task.taskTitle) && Objects.equals(description, task.description) && Objects.equals(dueDate, task.dueDate) && priority == task.priority && Objects.equals(completed, task.completed);
+        return Objects.equals(courseId, task.courseId) && Objects.equals(taskTitle, task.taskTitle) && Objects.equals(description, task.description) && Objects.equals(dueDate, task.dueDate) && priority == task.priority && Objects.equals(completed, task.completed);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(courseName, taskTitle, description, dueDate, priority, completed);
+        return Objects.hash(courseId, taskTitle, description, dueDate, priority, completed);
     }
 }
