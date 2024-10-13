@@ -3,6 +3,7 @@ package com.example.AMS.controller;
 import com.example.AMS.service.CourseService;
 import com.example.AMS.exception.DataDuplicateException;
 import com.example.AMS.exception.NoSuchDataException;
+import com.example.AMS.model.Course;  // Import the Course model
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,9 @@ public class CourseController {
     }
 
     @PostMapping("/ams/courses")
-    public ResponseEntity<String> addCourses(@RequestParam String courseId, @RequestParam String courseName) {
+    public ResponseEntity<String> addCourses(@RequestBody Course course) {
         try {
-            courseService.addCourse(courseId, courseName);
+            courseService.addCourse(course.getCourseId(), course.getCourseName());
             return ResponseEntity.status(HttpStatus.CREATED).body("Course added successfully");
         } catch (DataDuplicateException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -28,26 +29,26 @@ public class CourseController {
     }
 
     @GetMapping("/ams/courses")
-    public ResponseEntity<List<String>> getAllCourses() {
-        List<String> courses = courseService.getAllCourses();
-        return ResponseEntity.ok(courses);  // here the courses are returned along with the status
+    public ResponseEntity<List<Course>> getAllCourses() {
+        List<Course> courses = courseService.getAllCourses();
+        return ResponseEntity.ok(courses);
     }
 
-    @PutMapping("ams/courses/{courseId}")
-    public ResponseEntity<String> updateCourse(@PathVariable String courseId, @RequestParam String courseName) {
+    @DeleteMapping("/ams/courses/{courseId}")
+    public ResponseEntity<String> deleteCourse(@PathVariable String courseId) {
         try {
-            courseService.updateCourse(courseId, courseName);
-            return ResponseEntity.ok("Course updated successfully!");
+            courseService.deleteCourse(courseId);
+            return ResponseEntity.ok("Course Deleted Successfully");
         } catch (NoSuchDataException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/ams/courses/{coursesId}")
-    public ResponseEntity<String> deleteCourse(@PathVariable String courseId) {
+    @PutMapping("ams/courses/{courseId}")
+    public ResponseEntity<String> updateCourse(@PathVariable String courseId, @RequestBody Course course) {
         try {
-            courseService.deleteCourse(courseId);
-            return ResponseEntity.ok("Course Deleted");
+            courseService.updateCourse(courseId, course.getCourseId(), course.getCourseName());
+            return ResponseEntity.ok("Course Updated Successfully!");
         } catch (NoSuchDataException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

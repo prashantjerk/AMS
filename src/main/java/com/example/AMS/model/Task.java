@@ -1,20 +1,17 @@
 package com.example.AMS.model;
 
 import com.example.AMS.Priority;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long taskId;
+    private String taskId;
     private String courseId;
     private String taskTitle;
     private String description;
@@ -26,7 +23,8 @@ public class Task {
 
     }
 
-    public Task(String taskTitle, String description, LocalDate dueDate, Priority priority, boolean completed) {
+    public Task(String taskId, String taskTitle, String description, LocalDate dueDate, Priority priority, boolean completed) {
+        this.taskId = taskId;
         this.taskTitle = taskTitle;
         this.description = description;
         this.dueDate = dueDate;
@@ -34,12 +32,14 @@ public class Task {
         this.completed = completed;
     }
 
-    public Long getTaskId() {
+    public String getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(Long taskId) {
-        this.taskId = taskId;
+    @PrePersist
+    public void generateTaskId() {
+        if(this.taskId == null)
+            this.taskId = "task" + UUID.randomUUID().toString().substring(0, 4);
     }
 
     public String getCourseId() {

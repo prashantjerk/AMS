@@ -1,6 +1,5 @@
 package com.example.AMS.controller;
 
-import com.example.AMS.Priority;
 import com.example.AMS.model.Task;
 import com.example.AMS.service.TaskService;
 import com.example.AMS.exception.NoSuchDataException;
@@ -8,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -19,45 +17,45 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    // Create a task
     @PostMapping("/ams/courses/{courseId}/tasks")
-    public ResponseEntity<String> addTask(
-            @RequestParam(required = false) Long taskId,
-            @PathVariable Long courseId,
-            @RequestParam String taskTitle,
-            @RequestParam String description,
-            @RequestParam LocalDate dueDate,
-            @RequestParam Priority priority,
-            @RequestParam boolean completed) {
+    public ResponseEntity<String> addTask(@RequestBody Task task, @PathVariable String courseId) {
         try {
-            taskService.addTask(taskId, String.valueOf(courseId), taskTitle, description, dueDate, priority, completed);
+            taskService.addTask(courseId, task);
             return ResponseEntity.status(HttpStatus.CREATED).body("Task added successfully");
-        }  catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(e.getMessage());
         }
     }
 
+    // Get all tasks for a specific course
     @GetMapping("/ams/courses/{courseId}/tasks")
-    public ResponseEntity<List<Task>> getAllTasks(@PathVariable Long courseId) {
+    public ResponseEntity<List<Task>> getAllTasks(@PathVariable String courseId) {
         try {
-            List<Task> allTasks = taskService.getAllTasks(String.valueOf(courseId));
+            List<Task> allTasks = taskService.getAllTasks(courseId);
             return ResponseEntity.ok(allTasks);
         } catch (NoSuchDataException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @GetMapping("ams/courses/{courseId}/tasks/{taskId}")
-    public ResponseEntity<Task> getTask(@PathVariable String courseId, @PathVariable String taskId) {
+
+    // Get a task by its ID
+    @GetMapping("/ams/courses/{courseId}/tasks/{taskId}")
+    public ResponseEntity<Task> getTask(@PathVariable String taskId) {
         try {
-            Task task = taskService.getTask(Long.valueOf(taskId));
+            Task task = taskService.getTask(taskId);
             return ResponseEntity.ok(task);
         } catch (NoSuchDataException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
+    // Delete a task
     @DeleteMapping("/ams/courses/{courseId}/tasks/{taskId}")
-    public ResponseEntity<String> deleteTask(@PathVariable String courseId, @PathVariable Long taskId) {
+    public ResponseEntity<String> deleteTask(@PathVariable String taskId) {
         try {
             taskService.deleteTask(taskId);
             return ResponseEntity.status(HttpStatus.OK).body("Task deleted successfully");
@@ -66,23 +64,14 @@ public class TaskController {
         }
     }
 
+    // Update a task
     @PutMapping("/ams/courses/{courseId}/tasks/{taskId}")
-    public ResponseEntity<String> updateTask(
-            @PathVariable Long taskId,
-            @PathVariable String courseId,
-            @RequestParam String taskTitle,
-            @RequestParam String description,
-            @RequestParam LocalDate dueDate,
-            @RequestParam Priority priority,
-            @RequestParam boolean completed) {
-
+    public ResponseEntity<String> updateTask(@RequestBody Task updatedTask, @PathVariable String courseId, @PathVariable String taskId) {
         try {
-            // Call the service layer to update the task
-            taskService.updateTask(taskId, courseId, taskTitle, description, dueDate, priority, completed);
+            taskService.updateTask(taskId, courseId, updatedTask);
             return ResponseEntity.status(HttpStatus.OK).body("Task updated successfully.");
         } catch (NoSuchDataException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
 }

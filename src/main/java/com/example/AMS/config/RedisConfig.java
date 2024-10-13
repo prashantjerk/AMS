@@ -11,7 +11,7 @@ import redis.clients.jedis.JedisPooled;
 public class RedisConfig {
     @Bean
     public JedisPooled jedisPooled() {
-        HostAndPort hostandport = new HostAndPort("10.200.5.158", 6379);
+        HostAndPort hostandport = new HostAndPort("10.200.67.251", 6379);
 
         JedisClientConfig config = DefaultJedisClientConfig.builder()
                 .password("prakar2UoL#@")

@@ -1,8 +1,8 @@
 package com.example.AMS.model;
 
+
 import jakarta.persistence.Entity;
 
-import java.util.List;
 import java.util.Objects;
 
 @Entity
